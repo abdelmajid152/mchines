@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A4A24">
+<title>آلياتك — نموذج تجريبي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#0A4A24; --primary:#067A37; --bright:#0AA84F; --tint:#E3F3E8; --tint2:#EEF4F0;
+  --ink:#141A16; --muted:#4A554D; --line:#E3E7E4; --amber-bg:#FFF1CC; --amber:#6B4A00;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"IBM Plex Sans Arabic",sans-serif;color:var(--ink);background:#E9EFEB;display:flex;align-items:center;justify-content:center}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+a{color:var(--primary)}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;position:relative;overflow:hidden;box-shadow:0 0 0 10px #141A16,0 30px 70px rgba(0,0,0,.3)}
+@media (max-width:500px){
+  body{display:block;background:#fff}
+  .phone{width:100%;height:100dvh;border-radius:0;box-shadow:none}
+}
+.side-note{position:fixed;top:24px;right:24px;max-width:260px;font-size:14px;line-height:1.6;color:var(--muted)}
+.side-note b{color:var(--dark);font-size:18px;display:block;margin-bottom:4px}
+@media (max-width:900px){.side-note{display:none}}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:120px;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.nopad{padding-bottom:110px}
+/* header */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 10px;gap:10px}
+.hdr h1{margin:0;font-size:21px;font-weight:800}
+.circle-back{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--ink);flex-shrink:0;padding:0}
+.icon-btn{width:44px;height:44px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--primary);padding:0;position:relative}
+.badge{position:absolute;top:4px;left:3px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--primary);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.support-mini{width:44px;display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--ink);border:none;background:none;padding:0}
+/* common */
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;padding:22px 20px 10px}
+.sec-h h2{margin:0;font-size:18px;font-weight:800}
+.sec-h button{border:none;background:none;color:var(--primary);font-size:15px;font-weight:700;padding:0}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px}
+.chip.cn{background:var(--amber-bg);color:var(--amber)}
+.chip.sd{background:var(--tint);color:#0A5A2C}
+.btn{height:56px;border-radius:16px;border:none;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn.dark{background:var(--dark);color:#fff}
+.btn.green{background:var(--primary);color:#fff}
+.btn.outline{background:#fff;border:1.5px solid var(--dark);color:var(--dark);font-size:16px;font-weight:700;height:50px}
+.field{display:block;position:relative;margin:0 20px}
+.field>span{position:absolute;top:-11px;right:14px;padding:0 6px;background:#fff;font-size:14px;font-weight:500}
+.field input,.field textarea{width:100%;border:1.5px solid var(--ink);border-radius:14px;font-size:16px;padding:16px;outline:none;background:#fff}
+.field textarea{height:100px;resize:none}
+.field input:focus,.field textarea:focus{border-color:var(--primary)}
+.seg{margin:0 20px;padding:6px;border:1px solid var(--line);border-radius:14px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{height:48px;border-radius:10px;border:none;background:transparent;color:var(--primary);font-size:17px;font-weight:700}
+.seg button.on{background:var(--bright);color:#fff}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--bright);background:#fff;color:var(--primary);font-size:15px;font-weight:700}
+.pill.on{background:var(--bright);color:#fff}
+.ph{background:var(--tint2);display:flex;align-items:center;justify-content:center;color:#8FB39C}
+/* product cards */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px}
+.pcard{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;text-align:right;padding:0;color:var(--ink)}
+.pcard .ph{height:118px}
+.pcard .b{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.pcard .n{font-size:15px;font-weight:700;line-height:1.35}
+.price{font-size:16px;font-weight:800;color:var(--primary)}
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;padding:0 14px}
+.cat{display:flex;flex-direction:column;align-items:center;gap:6px;border:none;background:none;padding:0;color:var(--ink);font-size:14px;font-weight:500}
+.cat i{width:62px;height:62px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--primary)}
+/* nav */
+.navwrap{position:absolute;left:12px;right:12px;bottom:14px;height:72px;z-index:20}
+.navwrap svg.shape{position:absolute;left:0;top:0;width:100%;height:72px;filter:drop-shadow(0 8px 18px rgba(10,74,36,.16))}
+.navwrap nav{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding-bottom:8px}
+.navwrap nav button{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;color:#5B655E;font-size:12px;font-weight:500;padding:0}
+.navwrap nav button i{width:52px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.navwrap nav button.on{color:var(--primary);font-weight:700}
+.navwrap nav button.on i{background:var(--tint)}
+.navwrap .mid{text-align:center;font-size:12px;font-weight:700;color:var(--primary)}
+.fab{position:absolute;left:50%;margin-left:-32px;top:-30px;width:64px;height:64px;border-radius:50%;border:none;background:var(--bright);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px rgba(10,168,79,.12),0 8px 20px rgba(10,168,79,.4);padding:0}
+.navwrap.dark svg.shape{filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
+.navwrap.dark nav button{color:#B9C4BC}
+.navwrap.dark .mid{color:#3DD07F;font-weight:800}
+.navwrap.dark .fab{box-shadow:0 0 0 4px rgba(61,208,127,.3),0 0 26px rgba(10,168,79,.6)}
+/* reels */
+.reels{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;background:#18211B;scrollbar-width:none}
+.reels::-webkit-scrollbar{display:none}
+.reel{height:100%;scroll-snap-align:start;position:relative;color:#fff;overflow:hidden}
+.reel .vid{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.reel .vid svg{animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(-2deg)}}
+.reel .shade{position:absolute;left:0;right:0;bottom:0;height:440px;background:linear-gradient(to top,rgba(10,16,12,.92),rgba(10,16,12,0))}
+.reel .prog{position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.25)}
+.reel .prog div{height:3px;background:var(--bright);animation:prog 9s linear infinite}
+@keyframes prog{from{width:0}to{width:100%}}
+.reel-top{position:absolute;top:16px;left:0;right:0;padding:0 16px;display:flex;gap:8px;align-items:center;z-index:5}
+.rchip{height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.25);color:#fff;font-size:15px;font-weight:500}
+.rchip.on{background:#fff;color:var(--dark);border-color:#fff;font-weight:800}
+.ract{position:absolute;left:12px;bottom:300px;display:flex;flex-direction:column;gap:18px;align-items:center}
+.ract button{border:none;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px;font-weight:700;padding:0}
+.ract button i{width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.ract button.liked i{background:#D93A2B}
+.rcap{position:absolute;right:16px;left:80px;bottom:232px}
+.rcard{position:absolute;right:16px;left:16px;bottom:124px;background:#fff;border-radius:18px;padding:10px;display:flex;align-items:center;gap:10px;color:var(--ink)}
+/* misc */
+.toast{position:absolute;left:20px;right:20px;top:20px;background:var(--dark);color:#fff;padding:14px 16px;border-radius:14px;font-weight:700;font-size:15px;z-index:50;display:flex;gap:10px;align-items:center;transform:translateY(-250%);transition:transform .3s}
+.toast.show{transform:none}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end}
+.sheet{background:#fff;width:100%;border-radius:24px 24px 0 0;padding:10px 20px 30px}
+.grab{width:44px;height:5px;border-radius:3px;background:#D5DED8;margin:0 auto 14px}
+.row-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.row-line span:first-child{color:var(--muted)}
+.row-line span:last-child{font-weight:700}
+.list-item{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #E8ECE9;border-left:none;border-right:none;border-top:none;background:none;width:100%;text-align:right;color:var(--ink);font-size:18px}
+.list-item i{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0}
+.qty{display:flex;align-items:center;border:1px solid #D5DED8;border-radius:999px}
+.qty button{width:34px;height:34px;border:none;background:none;color:var(--primary);font-size:20px;font-weight:700;padding:0}
+.qty span{min-width:22px;text-align:center;font-size:15px;font-weight:800}
+.step{display:flex;gap:14px}
+.step .rail{display:flex;flex-direction:column;align-items:center;width:30px}
+.step .dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.step .ln{width:3px;height:26px}
+.empty{padding:50px 30px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="side-note"><b>آلياتك — نموذج تجريبي</b>هذا نموذج أولي للتصميم. الأسعار والمنتجات بيانات افتراضية للعرض فقط. جرّب الريلز، والبحث (اكتب «بلوك» مثلاً)، وقائمة عرض السعر.</div>
+<div class="phone" id="phone">
+  <div id="app"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+const I = {
+  back:'<path d="M10 6l6 6-6 6"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h11"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  cameraPlus:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><path d="M12 10.5v5M9.5 13h5"/>',
+  home:'<path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  box:'<path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  headset:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3.5" y="14" width="4" height="6" rx="1.2" fill="currentColor"/><rect x="16.5" y="14" width="4" height="6" rx="1.2" fill="currentColor"/>',
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  clip:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/>',
+  clipPlus:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M12 9.5v6M9 12.5h6"/>',
+  heart:'<path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/>',
+  share:'<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4M8.2 13.2l7.6 4"/>',
+  wa:'<path d="M4 20.5l1.4-4.1A8 8 0 1 1 8.6 19.3z"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+  sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/>',
+  pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  video:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M10 8.5v5l4-2.5zM8 21h8M12 17v4"/>',
+  help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/>',
+  logout:'<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>',
+  building:'<path d="M4 21V5l8-3v19M12 9h8v12M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
+  upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>',
+  // categories
+  agri:'<circle cx="7" cy="16" r="4"/><circle cx="18" cy="17" r="3"/><path d="M3.5 13V7h6l2.5 5h7.5v2.5M9.5 7V4"/>',
+  build:'<path d="M2.5 20h19M5 20v-5h9v5M14 15l3.5-9 3.5 2-2 5"/><path d="M7 15v-3h5v3"/>',
+  food:'<path d="M6 3v7a3 3 0 0 0 6 0V3M9 3v18M17 3c-2.2 2-2.2 6.5 0 8.5V21"/>',
+  pack:'<path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"/>',
+  gen:'<path d="M13 2.5L4.5 14H11l-1 7.5L18.5 10H12z"/>',
+  wood:'<path d="M3 17L14 6l4 4L7 21H3zM14 6l2.5-2.5 4 4L18 10"/>',
+  print:'<path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M6 14h12v7H6z"/>',
+  machine:'<rect x="3" y="9" width="18" height="10" rx="1.5"/><path d="M7 9V5h6v4M16 13h2M6 19v2M18 19v2"/>',
+  mill:'<path d="M8 3h8l-2 6h-4z"/><rect x="6" y="9" width="12" height="9" rx="1.5"/><path d="M9 18v3M15 18v3M12 12v3"/>',
+};
+const ic=(n,s=24,w=1.9,extra='')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${I[n]}</svg>`;
+const play=(s=30)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 6.2v11.6l9.2-5.8z"/></svg>`;
+
+const CATS=[
+  {id:'agri',name:'زراعية'},{id:'build',name:'بناء'},{id:'food',name:'تصنيع غذائي'},{id:'pack',name:'تعبئة وتغليف'},
+  {id:'gen',name:'مولدات'},{id:'wood',name:'ورش ونجارة'},{id:'print',name:'طباعة'}];
+const P=[
+  {id:1,name:'ماكينة تعبئة سوائل نصف أوتوماتيك',cat:'pack',price:1250,ship:380,src:'cn',days:'٣٠–٤٥',icon:'machine',reel:'شاهد ماكينة التعبئة وهي تعبّئ زيت الطعام',
+   specs:[['القدرة الإنتاجية','٢٠ عبوة / دقيقة'],['حجم التعبئة','٥٠–٥٠٠ مل'],['الكهرباء','220 فولت'],['الوزن','٤٥ كجم'],['الضمان','٦ أشهر']]},
+  {id:2,name:'مطحنة حبوب كهربائية ٣ حصان',cat:'food',price:480,ship:0,src:'sd',icon:'mill',reel:'مطحنة ٣ حصان تطحن الذرة والدخن بسرعة',
+   specs:[['القدرة','٣ حصان'],['الإنتاج','١٥٠ كجم / ساعة'],['الكهرباء','220 فولت'],['الوزن','٦٠ كجم'],['الضمان','٦ أشهر']]},
+  {id:3,name:'ماكينة لحام أكياس حرارية',cat:'pack',price:320,ship:90,src:'cn',days:'٣٠–٤٥',icon:'machine',reel:'لحام أكياس البلاستيك للسكر والبهارات',
+   specs:[['طول اللحام','٤٠ سم'],['الكهرباء','220 فولت'],['الوزن','١٨ كجم'],['الضمان','٣ أشهر']]},
+  {id:4,name:'خلاطة خرسانة ٣٥٠ لتر',cat:'build',price:1900,ship:520,src:'cn',days:'٤٥–٦٠',icon:'build',reel:'خلاطة ٣٥٠ لتر بمحرك ديزل في موقع بناء',
+   specs:[['السعة','٣٥٠ لتر'],['المحرك','ديزل ٦ حصان'],['الوزن','٤٢٠ كجم'],['الضمان','٦ أشهر']]},
+  {id:5,name:'مكبس طوب بلوك يدوي',cat:'build',price:850,ship:0,src:'sd',icon:'build',reel:'مكبس بلوك يدوي ينتج ٨٠٠ طوبة يومياً',
+   specs:[['الإنتاج','٨٠٠ طوبة / يوم'],['التشغيل','يدوي'],['الوزن','٢٥٠ كجم'],['الضمان','سنة']]},
+  {id:6,name:'مولد ديزل ١٠ كيلوواط',cat:'gen',price:2600,ship:610,src:'cn',days:'٣٠–٤٥',icon:'gen',reel:'مولد ١٠ كيلوواط صامت لمحل أو ورشة',
+   specs:[['القدرة','١٠ كيلوواط'],['الوقود','ديزل'],['الجهد','220 / 380 فولت'],['الضمان','سنة']]},
+  {id:7,name:'محراث دوار للجرار',cat:'agri',price:1400,ship:450,src:'cn',days:'٤٥–٦٠',icon:'agri',reel:'المحراث الدوار يجهّز الأرض للزراعة',
+   specs:[['عرض الحراثة','١٨٠ سم'],['التركيب','جرار ٤٥–٧٠ حصان'],['الوزن','٣٩٠ كجم'],['الضمان','٦ أشهر']]},
+  {id:8,name:'ماكينة عصر زيت السمسم',cat:'food',price:2100,ship:540,src:'cn',days:'٣٠–٤٥',icon:'food',reel:'عصّارة زيت السمسم والفول السوداني',
+   specs:[['الإنتاج','٥٠ كجم / ساعة'],['الكهرباء','380 فولت'],['الوزن','٣٢٠ كجم'],['الضمان','سنة']]},
+];
+const usd=n=>'$'+n.toLocaleString('en-US');
+const byId=id=>P.find(p=>p.id===id);
+const chip=p=>p.src==='sd'?'<span class="chip sd">متوفر في السودان</span>':'<span class="chip cn">يُطلب من الصين</span>';
+
+const S={stack:['home'],pid:1,q:'',cat:null,quote:{2:2,3:1},liked:{},muted:true,ordersTab:'orders',findTab:'link',volt:'220',inquiries:[
+  {name:'مكبس طوب يدوي',when:'قبل يومين',status:'تم الرد · نقدر نجيبه',ok:true},
+  {name:'آلة خياطة صناعية',when:'اليوم',status:'قيد المراجعة',ok:false}]};
+const cur=()=>S.stack[S.stack.length-1];
+function go(s,opts={}){Object.assign(S,opts); if(['home','reels','cats','orders','menu'].includes(s)) S.stack=[s]; else S.stack.push(s); render(); }
+function back(){ if(S.stack.length>1) S.stack.pop(); render(); }
+function toast(msg){const t=document.getElementById('toast');t.innerHTML=ic('check',20,2.6)+msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
+const qCount=()=>Object.values(S.quote).reduce((a,b)=>a+b,0);
+
+const backBtn=()=>`<button class="circle-back" data-act="back" aria-label="رجوع">${ic('back',20,2.6)}</button>`;
+const supportMini=()=>`<button class="support-mini" data-act="wa">${ic('headset',26,1.9,'style="color:var(--primary)"')}الدعم</button>`;
+function hdr(title,right=supportMini()){return `<div class="hdr">${backBtn()}<h1>${title}</h1>${right}</div>`;}
+
+function nav(active,dark=false){
+  const shape=`<svg class="shape" viewBox="0 0 366 72" preserveAspectRatio="none" aria-hidden="true"><path d="M24 0.75H125C143 0.75 139 36 183 36C227 36 223 0.75 241 0.75H342A23.25 23.25 0 0 1 365.25 24V48A23.25 23.25 0 0 1 342 71.25H24A23.25 23.25 0 0 1 0.75 48V24A23.25 23.25 0 0 1 24 0.75Z" fill="${dark?'#1E2924':'#fff'}" stroke="${dark?'#1F8A4A':'#CFE3D6'}" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`;
+  const b=(id,icon,label)=>`<button data-go="${id}" class="${active===id?'on':''}"><i>${ic(icon,22,active===id?2.1:1.8)}</i>${label}</button>`;
+  return `<div class="navwrap ${dark?'dark':''}">${shape}<nav aria-label="التنقل الرئيسي">${b('home','home','الرئيسية')}${b('cats','grid','الأقسام')}<span class="mid">ريلز</span>${b('orders','box','طلباتي')}${b('menu','user','حسابي')}</nav><button class="fab" data-go="reels" aria-label="ريلز المنتجات">${play()}</button></div>`;
+}
+function pcard(p){return `<button class="pcard" data-pid="${p.id}"><span class="ph">${ic(p.icon,54,1.3)}</span><span class="b"><span class="n">${p.name}</span>${chip(p)}<span class="price">${usd(p.price)}</span></span></button>`;}
+
+/* ---------- screens ---------- */
+const V={};
+V.home=()=>`<div class="screen">
+ <div class="hdr" style="padding-bottom:4px">
+  <button class="icon-btn" data-go="menu" aria-label="القائمة" style="color:var(--ink)">${ic('menu',28,2.4)}</button>
+  <div style="display:flex;align-items:center;gap:2px">
+   <button class="icon-btn" data-go="quote" aria-label="قائمة عرض السعر">${ic('clip',25)}${qCount()?`<span class="badge">${qCount()}</span>`:''}</button>
+   <button class="icon-btn" data-act="wa" aria-label="الدعم الفني">${ic('headset',26)}</button>
+   <button class="icon-btn" data-act="notif" aria-label="الإشعارات">${ic('bell',26)}</button>
+  </div></div>
+ <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+  <div style="width:46px;height:46px;border-radius:14px;background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff">${ic('gen',26,1.9)}</div>
+  <div style="line-height:1.1"><div style="font-size:24px;font-weight:800;color:var(--dark)">آلياتك</div><div style="font-size:12px;font-weight:500;color:#5B655E;letter-spacing:1px">MACHINES · SUDAN</div></div>
+ </div>
+ <div style="padding:14px 20px 0"><div style="font-size:22px;font-weight:800;color:var(--primary)">أهلاً بك</div><div style="font-size:18px;font-weight:500;color:#3A443D">عبدالمجيد يحيى</div></div>
+ <form data-form="search" style="padding:16px 20px 0"><label style="display:flex;align-items:center;gap:10px;height:54px;padding:0 8px 0 16px;border:1.5px solid var(--ink);border-radius:16px">
+  <input name="q" placeholder="ابحث عن آلة أو مكنة…" aria-label="بحث" style="flex:1;min-width:0;border:none;outline:none;font-size:16px;background:transparent">
+  <button style="width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;border:none;display:flex;align-items:center;justify-content:center;padding:0" aria-label="بحث">${ic('search',20,2.4)}</button></label></form>
+ <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:10px">
+  <button data-go="find" style="display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 18px;border-radius:16px;background:var(--dark);color:#fff;border:none;text-align:right"><span><span style="display:block;font-size:18px;font-weight:700">ابحث لي عن منتج</span><span style="font-size:13px;color:#CFE6D7">رأيت آلة في علي إكسبرس؟ أرسل الرابط</span></span>${ic('link',26,2)}</button>
+  <button data-go="custom" style="display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 18px;border-radius:16px;background:#fff;border:1.5px solid var(--dark);color:var(--dark);text-align:right"><span><span style="display:block;font-size:18px;font-weight:700">اطلب آلة خاصة</span><span style="font-size:13px;color:var(--muted)">صوّر أو صف لنا الآلة التي تحتاجها</span></span>${ic('camera',26,2)}</button>
+ </div>
+ <div class="sec-h"><h2>الأقسام</h2><button data-go="cats">عرض الكل</button></div>
+ <div class="cats">${CATS.map(c=>`<button class="cat" data-cat="${c.id}"><i>${ic(c.id,30,1.7)}</i>${c.name}</button>`).join('')}<button class="cat" data-go="cats" style="color:var(--primary);font-weight:700"><i style="background:var(--primary);color:#fff;border:none"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="18" cy="12" r="1.8"/></svg></i>المزيد</button></div>
+ <div class="sec-h"><h2>وصل حديثاً</h2><button data-act="all">عرض الكل</button></div>
+ <div class="pgrid">${P.slice(0,4).map(pcard).join('')}</div>
+</div>${nav('home')}`;
+
+V.cats=()=>`<div class="screen"><div class="hdr"><span style="width:44px"></span><h1>الأقسام</h1>${supportMini()}</div>
+ <div style="padding:6px 20px 0;display:flex;flex-direction:column;gap:10px">${CATS.map(c=>{const n=P.filter(p=>p.cat===c.id).length;return `<button data-cat="${c.id}" style="display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:right;color:var(--ink)"><i style="width:56px;height:56px;border-radius:50%;background:var(--tint2);display:flex;align-items:center;justify-content:center;color:var(--primary)">${ic(c.id,28,1.7)}</i><span style="flex:1"><span style="display:block;font-size:17px;font-weight:700">${c.name}</span><span style="font-size:13px;color:var(--muted)">${n} منتجات</span></span><span style="color:var(--muted);transform:scaleX(-1)">${ic('back',18,2.4)}</span></button>`}).join('')}</div>
+</div>${nav('cats')}`;
+
+V.list=()=>{ let items, title;
+ if(S.cat){items=P.filter(p=>p.cat===S.cat);title=CATS.find(c=>c.id===S.cat).name;}
+ else if(S.q){const q=S.q.trim();items=P.filter(p=>p.name.includes(q)||CATS.find(c=>c.id===p.cat).name.includes(q));title='نتائج البحث';}
+ else {items=P;title='كل المنتجات';}
+ if(!items.length) return V.empty();
+ return `<div class="screen nopad">${hdr(title)}
+ ${S.q?`<div style="padding:0 20px 12px;color:var(--muted);font-size:15px">${items.length} نتائج لـ «${S.q}»</div>`:''}
+ <div class="pgrid">${items.map(pcard).join('')}</div>
+ <div style="margin:22px 20px 0;padding:16px;border-radius:16px;background:var(--tint2);display:flex;align-items:center;gap:12px"><span style="flex:1;font-size:15px;font-weight:700">لم تجد ما تريد؟</span><button data-go="find" class="btn dark" style="width:auto;height:44px;padding:0 16px;font-size:15px">ابحث لي</button></div>
+ </div>`;};
+
+V.empty=()=>`<div class="screen nopad">
+ <div class="hdr">${backBtn()}<div style="flex:1;display:flex;align-items:center;gap:8px;height:50px;padding:0 14px;border:1.5px solid var(--primary);border-radius:16px">${ic('search',20,2.4,'style="color:var(--primary)"')}<span style="font-size:16px;font-weight:700">${S.q}</span></div></div>
+ <div style="text-align:center;padding:30px 32px 0"><div style="width:132px;height:132px;border-radius:50%;background:#EEF6F1;margin:0 auto;display:flex;align-items:center;justify-content:center;color:#6FA884">${ic('search',72,1.3)}</div>
+ <h1 style="margin:20px 0 6px;font-size:21px;font-weight:800">لا توجد نتائج لـ «${S.q}»</h1><p style="margin:0;font-size:15px;line-height:1.6;color:var(--muted)">جرّب كلمة أخرى، أو دعنا نبحث عنها لك عند الموردين في الصين.</p></div>
+ <div style="margin:26px 20px 0;padding:20px;border-radius:20px;background:var(--dark);color:#fff">
+  <div style="font-size:19px;font-weight:800">لم تجد ما تبحث عنه؟ نجده لك</div><div style="font-size:14px;color:#CFE6D7;margin-top:4px">يرد عليك فريق الدعم بالتوفر والسعر ومدة الوصول</div>
+  <button data-go="find" class="btn" style="margin-top:16px;height:52px;background:#fff;color:var(--dark);font-size:16px">${ic('link',20,2.2)}أرسل رابطاً أو صورة شاشة</button>
+  <button data-go="custom" class="btn" style="margin-top:10px;height:52px;background:transparent;border:1.5px solid #fff;color:#fff;font-size:16px;font-weight:700">${ic('camera',20,2)}صوّر أو صف الآلة التي تريدها</button>
+ </div>
+ <div class="sec-h"><h2>آلات قد تناسبك</h2></div><div class="pgrid">${P.slice(3,5).map(pcard).join('')}</div>
+</div>`;
+
+V.product=()=>{const p=byId(S.pid);const inQ=S.quote[p.id];return `<div class="screen" style="padding-bottom:150px">
+ <div class="ph" style="height:300px;position:relative">${ic(p.icon,120,1)}
+  <div style="position:absolute;top:16px;right:16px;left:16px;display:flex;justify-content:space-between">${backBtn()}
+   <div style="display:flex;gap:10px"><button class="icon-btn" data-act="share" aria-label="مشاركة" style="background:#fff;border:1px solid var(--line);border-radius:50%">${ic('share',20,2)}</button><button class="icon-btn" data-act="like" aria-label="مفضلة" style="background:#fff;border:1px solid var(--line);border-radius:50%;color:${S.liked[p.id]?'#D93A2B':'var(--primary)'}">${ic('heart',20,2,S.liked[p.id]?'fill="currentColor"':'')}</button></div></div>
+  <button data-go="reels" style="position:absolute;bottom:16px;right:16px;height:40px;padding:0 14px 0 16px;border-radius:999px;border:none;background:var(--ink);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px">${play(16)}شاهد الآلة وهي تعمل</button></div>
+ <div style="padding:18px 20px 0"><div style="font-size:13px;font-weight:700;color:var(--primary)">${CATS.find(c=>c.id===p.cat).name}</div>
+  <h1 style="margin:4px 0 10px;font-size:22px;font-weight:800;line-height:1.35">${p.name}</h1>
+  ${p.src==='cn'?`<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:#FFF6DC;color:#5C4000"><span style="width:10px;height:10px;border-radius:50%;background:#C98A00"></span><b style="font-size:15px">يُطلب خصيصاً من الصين</b><span style="margin-right:auto;font-size:14px">يصل خلال ${p.days} يوماً</span></div>`
+   :`<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--tint);color:#0A5A2C"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary)"></span><b style="font-size:15px">متوفر في السودان</b><span style="margin-right:auto;font-size:14px">تسليم خلال أيام</span></div>`}</div>
+ <div style="margin:16px 20px 0;padding:18px;border-radius:18px;background:#0E7A3A;color:#fff">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 12px">
+   <div><div style="font-size:14px;color:#D3EADB">سعر الآلة</div><div style="font-size:20px;font-weight:800">${usd(p.price)}</div></div>
+   <div><div style="font-size:14px;color:#D3EADB">الشحن والجمارك (تقديري)</div><div style="font-size:20px;font-weight:800">${p.ship?usd(p.ship):'مشمول'}</div></div>
+   <div><div style="font-size:14px;color:#D3EADB">الإجمالي التقديري</div><div style="font-size:20px;font-weight:800">${usd(p.price+p.ship)}</div></div>
+   <div><div style="font-size:14px;color:#D3EADB">العربون المطلوب</div><div style="font-size:20px;font-weight:800">${p.src==='cn'?'٣٠٪':'—'}</div></div></div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.25);font-size:13px;color:#E4F2E9">${ic('info',18,2)}جميع الأسعار بالدولار، والسعر النهائي يُثبَّت في عرض السعر</div></div>
+ <div style="padding:20px 20px 0"><h2 style="margin:0 0 8px;font-size:18px;font-weight:800">المواصفات</h2>${p.specs.map(s=>`<div class="row-line"><span>${s[0]}</span><span>${s[1]}</span></div>`).join('')}</div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px 20px;background:#fff;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;z-index:5">
+ <div style="display:flex;gap:10px"><button class="btn green" data-act="order">اطلب الآن</button><button data-act="wa" aria-label="واتساب" style="width:56px;height:56px;border-radius:50%;border:none;background:var(--bright);color:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center">${ic('wa',26,2)}</button></div>
+ <button class="btn outline" data-act="addq">${ic(inQ?'check':'clipPlus',20,2)}${inQ?'في قائمة عرض السعر · عرض القائمة':'أضف لقائمة عرض السعر'}</button></div>`;};
+
+V.reels=()=>`<div class="reels" id="reels">${P.map((p,i)=>`<section class="reel">
+ <div class="vid" style="background:${['#26352B','#2B3330','#22302A','#2E3A2F'][i%4]};color:#5E7A66">${ic(p.icon,170,.8)}</div>
+ <div class="shade"></div><div class="prog"><div></div></div>
+ <div class="ract">
+  <button data-act="like" data-id="${p.id}" class="${S.liked[p.id]?'liked':''}"><i>${ic('heart',24,2,S.liked[p.id]?'fill="currentColor"':'')}</i>حفظ</button>
+  <button data-act="share"><i>${ic('share',22,2)}</i>مشاركة</button>
+  <button data-act="wa"><i style="background:var(--bright)">${ic('wa',24,2)}</i>اسأل</button></div>
+ <div class="rcap"><div style="font-size:18px;font-weight:800;line-height:1.4">${p.reel}</div><div style="font-size:14px;color:#D4DED7;margin-top:4px">#${CATS.find(c=>c.id===p.cat).name.replace(/ /g,'_')} · #مشاريع_صغيرة</div></div>
+ <div class="rcard"><button data-pid="${p.id}" style="flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:none;background:none;padding:0;text-align:right;color:var(--ink)"><span class="ph" style="width:64px;height:64px;border-radius:12px;flex-shrink:0">${ic(p.icon,34,1.4)}</span>
+  <span style="min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</span><span class="price">${usd(p.price)}</span><span style="font-size:12px;font-weight:700;color:${p.src==='cn'?'var(--amber)':'#0A5A2C'}">● ${p.src==='cn'?'يُطلب من الصين':'متوفر في السودان'} · التفاصيل ‹</span></span></button>
+  <button data-pid="${p.id}" data-buy="1" style="height:48px;padding:0 16px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-size:16px;font-weight:800;flex-shrink:0">اطلب الآن</button></div>
+</section>`).join('')}</div>
+<div class="reel-top"><button class="rchip on">الكل</button><button class="rchip" data-cat="agri">زراعية</button><button class="rchip" data-cat="build">بناء</button><button class="rchip" data-cat="pack">تعبئة</button>
+ <button data-act="mute" aria-label="الصوت" style="margin-right:auto;width:40px;height:40px;border-radius:50%;border:none;background:rgba(0,0,0,.4);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic(S.muted?'mute':'sound',20,2)}</button></div>
+${nav('reels',true)}`;
+
+V.find=()=>`<div class="screen nopad">${hdr('ابحث لي عن منتج')}
+ <p style="margin:0;padding:4px 20px 0;font-size:16px;line-height:1.6;color:#3A443D">رأيت آلة في علي إكسبرس أو علي بابا أو أي موقع آخر؟ أرسل لنا الرابط أو صورة الشاشة، ونخبرك إن كانت متوفرة وبكم تصلك إلى السودان.</p>
+ <div class="seg" style="margin-top:18px"><button data-ft="link" class="${S.findTab==='link'?'on':''}">رابط المنتج</button><button data-ft="shot" class="${S.findTab==='shot'?'on':''}">صورة الشاشة</button></div>
+ <div style="padding-top:24px">${S.findTab==='link'
+  ?`<label class="field"><span>رابط المنتج</span><input dir="ltr" placeholder="https://aliexpress.com/item/…" style="text-align:right"></label>`
+  :`<button data-act="pick" style="margin:0 20px;width:calc(100% - 40px);height:150px;border-radius:16px;border:1.5px dashed var(--primary);background:#F3F9F5;color:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:700">${ic('upload',32,2)}اختر صورة الشاشة من المعرض</button>`}</div>
+ <div style="padding-top:24px"><label class="field"><span>ملاحظات (اختياري)</span><textarea placeholder="الكمية، نوع الكهرباء، لون أو مقاس معيّن…"></textarea></label></div>
+ <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 20px 0;font-size:14px;color:#3A443D">${ic('info',20,2,'style="color:#7A5A00"')}يرد عليك فريق الدعم بالتوفر والسعر ومدة الوصول</div>
+ <div style="padding:16px 20px 0"><button class="btn dark" data-act="sendfind">إرسال الطلب</button></div>
+ <div style="padding:26px 20px 0"><h2 style="margin:0 0 10px;font-size:17px;font-weight:800">طلباتك السابقة</h2>${inqList()}</div>
+</div>`;
+function inqList(){return S.inquiries.map(q=>`<div style="display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border:1px solid var(--line);border-radius:14px"><span class="ph" style="width:56px;height:56px;border-radius:12px;flex-shrink:0">${ic('machine',30,1.4)}</span><span style="flex:1;min-width:0"><span style="display:block;font-size:15px;font-weight:700">${q.name}</span><span style="font-size:13px;color:var(--muted)">أُرسل ${q.when}</span></span><span class="chip ${q.ok?'sd':'cn'}" style="padding:5px 10px">${q.status}</span></div>`).join('');}
+
+V.custom=()=>`<div class="screen" style="padding-bottom:110px">${hdr('اطلب آلة خاصة')}
+ <p style="margin:0;padding:4px 20px 0;font-size:16px;line-height:1.6;color:#3A443D">صوّر الآلة التي تريدها أو شيئاً مشابهاً لها، أو صف لنا ما تريد إنتاجه، وفريقنا يبحث لك عن الأنسب.</p>
+ <h2 style="margin:0;padding:20px 20px 10px;font-size:17px;font-weight:800">الصور والفيديو</h2>
+ <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 20px">
+  <div class="ph" style="height:104px;border-radius:14px;background:#DDE9E1">${ic('machine',40,1.3)}</div>
+  <div style="height:104px;border-radius:14px;background:#2B3A30;position:relative;display:flex;align-items:center;justify-content:center;color:#fff">${play(30)}<span style="position:absolute;bottom:6px;right:8px;font-size:12px;font-weight:700">0:42</span></div>
+  <button data-act="pick" style="height:104px;border-radius:14px;border:1.5px dashed var(--primary);background:#F3F9F5;color:var(--primary);font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">${ic('cameraPlus',28,2)}إضافة</button></div>
+ <p style="margin:8px 0 0;padding:0 20px;font-size:13px;color:var(--muted)">حتى ٥ صور وفيديو واحد مدته دقيقة كحد أقصى</p>
+ <button data-act="rec" style="margin:16px 20px 0;width:calc(100% - 40px);padding:12px 14px;border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:12px;background:#fff;text-align:right;color:var(--ink)"><span style="width:48px;height:48px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('mic',22,2.2)}</span><span><span style="display:block;font-size:16px;font-weight:700">سجّل رسالة صوتية</span><span style="font-size:13px;color:var(--muted)">اشرح طلبك بصوتك بدل الكتابة</span></span></button>
+ <div style="padding-top:24px"><label class="field"><span>وصف الآلة المطلوبة</span><textarea placeholder="مثلاً: أريد آلة لصناعة الطحنية بإنتاج ١٠٠ كجم في اليوم…"></textarea></label></div>
+ <div style="padding:22px 20px 0"><div style="font-size:15px;font-weight:700;margin-bottom:8px">الكهرباء المتاحة عندك</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${['220 فولت','380 فولت','مولد / ديزل'].map(v=>`<button class="pill ${S.volt===v.split(' ')[0]?'on':''}" data-volt="${v.split(' ')[0]}" style="padding:0">${v}</button>`).join('')}</div></div>
+ <div style="padding-top:24px"><label class="field"><span>الميزانية التقريبية (اختياري)</span><input inputmode="numeric" placeholder="بالدولار"></label></div>
+ <div style="padding:22px 20px 0"><button class="btn dark" data-act="sendcustom">إرسال للدعم الفني</button></div>
+</div>`;
+
+V.quote=()=>{const ids=Object.keys(S.quote).map(Number);const total=ids.reduce((a,id)=>a+byId(id).price*S.quote[id],0);
+ return `<div class="screen" style="padding-bottom:180px"><div class="hdr">${backBtn()}<h1>قائمة عرض السعر</h1><span style="width:44px;height:30px;border-radius:15px;background:var(--tint);color:#0A5A2C;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center">${qCount()}</span></div>
+ <div style="margin:0 20px;padding:12px 14px;border-radius:14px;background:#F3F9F5;display:flex;gap:10px;font-size:14px;line-height:1.6;color:#2F3A33">${ic('truck',22,2,'style="color:var(--primary);flex-shrink:0"')}<span>أضف كل الآلات التي تحتاجها، ونرسل لك <b>عرض سعر واحد بشحن مجمّع</b>، وهو أوفر من طلب كل آلة وحدها.</span></div>
+ <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:12px">
+ ${ids.length?ids.map(id=>{const p=byId(id);return `<div style="display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px">
+  <button data-pid="${p.id}" class="ph" style="width:76px;height:76px;border-radius:12px;border:none;flex-shrink:0">${ic(p.icon,38,1.3)}</button>
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start">
+   <div style="display:flex;justify-content:space-between;gap:8px;width:100%"><span style="font-size:15px;font-weight:700;line-height:1.35">${p.name}</span><button data-rm="${p.id}" aria-label="حذف" style="width:32px;height:32px;border:none;background:none;color:#8A948D;padding:0;flex-shrink:0">${ic('trash',18,2)}</button></div>
+   ${chip(p)}
+   <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:4px"><span class="price">${usd(p.price)}</span><div class="qty"><button data-inc="${p.id}" aria-label="زيادة">+</button><span>${S.quote[id]}</span><button data-dec="${p.id}" aria-label="تقليل">−</button></div></div></div></div>`}).join('')
+  :`<div class="empty">قائمتك فارغة.<br>أضف الآلات من صفحات المنتجات.</div>`}
+  <button data-act="all" style="height:46px;border-radius:14px;border:1.5px dashed var(--primary);background:#fff;color:var(--primary);font-size:15px;font-weight:700">+ أضف آلة أخرى</button></div>
+ <div style="padding-top:22px"><label class="field"><span>ملاحظات لفريق المبيعات (اختياري)</span><textarea style="height:80px" placeholder="مثلاً: نريدها خط إنتاج واحد لتعبئة الزيت…"></textarea></label></div>
+</div>
+<div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px 22px;background:#fff;border-top:1px solid var(--line);z-index:5">
+ <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:4px"><span style="color:var(--muted)">إجمالي الآلات (${qCount()} قطع)</span><b>${usd(total)}</b></div>
+ <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:12px"><span style="color:var(--muted)">الشحن المجمّع والجمارك</span><b style="color:var(--primary)">يُحسب في العرض</b></div>
+ <button class="btn dark" data-act="sendquote" ${ids.length?'':'disabled style="opacity:.5"'}>اطلب عرض السعر</button></div>`;};
+
+V.orders=()=>{const steps=[['تأكيد الطلب','٢ نوفمبر',2],['دفع العربون','تم استلام إشعار التحويل',2],['الشراء من المورد في الصين','',2],['في الشحن البحري','غادرت الشحنة ميناء الصين',1],['الوصول إلى بورتسودان','',0],['التخليص الجمركي','',0],['التسليم','',0]];
+ return `<div class="screen"><div class="hdr"><span style="width:44px"></span><h1>طلباتي</h1>${supportMini()}</div>
+ <div class="seg"><button data-ot="orders" class="${S.ordersTab==='orders'?'on':''}">الطلبات</button><button data-ot="inq" class="${S.ordersTab==='inq'?'on':''}">الاستفسارات (${S.inquiries.length})</button></div>
+ ${S.ordersTab==='inq'?`<div style="padding:18px 20px 0">${inqList()}</div>`:`
+ <div style="margin:18px 20px 0;padding:16px;border-radius:18px;background:#0E7A3A;color:#fff;display:flex;gap:12px;align-items:center"><span style="width:64px;height:64px;border-radius:14px;background:#3D9862;display:flex;align-items:center;justify-content:center;color:#D3EADB;flex-shrink:0">${ic('machine',34,1.4)}</span><span><b style="display:block;font-size:16px">ماكينة تعبئة سوائل نصف أوتوماتيك</b><span style="font-size:14px;color:#D3EADB">طلب رقم #1024 · الكمية ١</span><b style="display:block;font-size:14px">الوصول المتوقع: ١٥ ديسمبر</b></span></div>
+ <div style="padding:22px 20px 0"><h2 style="margin:0 0 14px;font-size:17px;font-weight:800">حالة الطلب</h2>
+ ${steps.map((s,i)=>`<div class="step"><div class="rail"><span class="dot" style="${s[2]===2?'background:var(--primary);color:#fff':s[2]===1?'border:3px solid var(--primary)':'border:2px solid #C9D3CC'}">${s[2]===2?ic('check',16,3):s[2]===1?'<span style="width:10px;height:10px;border-radius:50%;background:var(--primary)"></span>':''}</span>${i<steps.length-1?`<span class="ln" style="background:${s[2]===2?'var(--primary)':'#D5DED8'}"></span>`:''}</div><div style="padding-top:4px"><div style="font-size:16px;font-weight:${s[2]===1?800:s[2]?700:500};color:${s[2]===1?'var(--primary)':s[2]?'var(--ink)':'var(--muted)'}">${s[0]}</div>${s[1]?`<div style="font-size:13px;color:var(--muted)">${s[1]}</div>`:''}</div></div>`).join('')}</div>
+ <div style="padding:22px 20px 0"><button class="btn outline" data-act="wa">${ic('chat',20,2)}محادثة الدعم</button></div>`}
+</div>${nav('orders')}`;};
+
+V.menu=()=>`<div class="screen">
+ <div style="background:var(--dark);color:#fff;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+  <div><div style="font-size:22px;font-weight:700">أهلاً بك، عبدالمجيد</div><span style="display:inline-flex;margin-top:6px;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fff;color:var(--dark);align-items:center;gap:6px">${ic('building',14,2.2)}حساب شركة · موثّق</span></div>
+  <button data-go="home" aria-label="إغلاق" style="width:46px;height:46px;border-radius:50%;background:#fff;border:none;display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0">${ic('x',22,2.6)}</button></div>
+ <div style="padding:0 20px">
+ ${[['user','بيانات الحساب والشركة'],['box','طلباتي وعروض الأسعار','orders'],['clip','قائمة عرض السعر','quote'],['heart','المفضلة'],['pin','عناوين التوصيل'],['bell','الإشعارات'],['video','فيديوهات إرشادية'],['help','المساعدة والدعم الفني']].map(r=>`<button class="list-item" ${r[2]?`data-go="${r[2]}"`:'data-act="soon"'}><i>${ic(r[0],26,1.8)}</i>${r[1]}</button>`).join('')}
+ <button class="list-item" data-act="share"><i style="background:var(--bright);color:#fff;border:none">${ic('share',24,2)}</i>ادعُ أصدقاءك</button>
+ <button class="list-item" data-act="soon" style="color:#B42318;font-weight:700;border-bottom:none"><i style="color:#B42318;border-color:#F2D4D0">${ic('logout',24,2)}</i>تسجيل الخروج</button></div>
+ <div style="text-align:center;font-size:13px;color:#6B746E;padding-top:10px">الإصدار 1.0.0 · نموذج تجريبي</div>
+</div>${nav('menu')}`;
+
+/* ---------- render & events ---------- */
+function render(){
+  let s=cur(); if(s==='list'&&!S.cat&&S.q&&!P.some(p=>p.name.includes(S.q.trim())||CATS.find(c=>c.id===p.cat).name.includes(S.q.trim()))) s='empty';
+  document.getElementById('app').innerHTML=(V[s]||V.home)();
+  const sc=document.querySelector('.screen'); if(sc) sc.scrollTop=0;
+}
+document.getElementById('app').addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-go]'); if(!t) return;
+  const d=t.dataset;
+  if(d.go){ if(d.go==='reels'&&cur()==='reels'){document.getElementById('reels').scrollTo({top:0,behavior:'smooth'});return;} return go(d.go); }
+  if(d.pid){ S.pid=+d.pid; if(d.buy) return orderNow(); return go('product'); }
+  if(d.cat){ return go('list',{cat:d.cat,q:''}); }
+  if(d.ft){ S.findTab=d.ft; return render(); }
+  if(d.ot){ S.ordersTab=d.ot; return render(); }
+  if(d.volt){ S.volt=d.volt; return render(); }
+  if(d.inc){ S.quote[d.inc]++; return render(); }
+  if(d.dec){ if(--S.quote[d.dec]<=0) delete S.quote[d.dec]; return render(); }
+  if(d.rm){ delete S.quote[d.rm]; return render(); }
+  switch(d.act){
+    case 'back': return back();
+    case 'all': return go('list',{cat:null,q:''});
+    case 'like': { const id=+(d.id||S.pid); S.liked[id]=!S.liked[id]; toast(S.liked[id]?'تمت الإضافة للمفضلة':'أُزيلت من المفضلة'); if(cur()==='reels'){t.classList.toggle('liked',S.liked[id]); t.querySelector('svg').setAttribute('fill',S.liked[id]?'currentColor':'none'); return;} return render(); }
+    case 'share': return toast('تم نسخ رابط المشاركة');
+    case 'wa': return toast('سيفتح واتساب للتواصل مع الدعم');
+    case 'notif': return toast('لا توجد إشعارات جديدة');
+    case 'mute': S.muted=!S.muted; t.innerHTML=ic(S.muted?'mute':'sound',20,2); return;
+    case 'pick': return toast('سيفتح معرض الصور في التطبيق الحقيقي');
+    case 'rec': return toast('سيبدأ التسجيل الصوتي في التطبيق الحقيقي');
+    case 'soon': return toast('هذه الشاشة ضمن المرحلة القادمة');
+    case 'addq': { if(S.quote[S.pid]) return go('quote'); S.quote[S.pid]=1; toast('أُضيفت لقائمة عرض السعر'); return render(); }
+    case 'order': return orderNow();
+    case 'sendfind': S.inquiries.unshift({name:'منتج من رابط خارجي',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك، سيرد عليك الدعم قريباً'); S.ordersTab='inq'; return go('orders');
+    case 'sendcustom': S.inquiries.unshift({name:'طلب آلة خاصة',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك للدعم الفني'); S.ordersTab='inq'; return go('orders');
+    case 'sendquote': S.quote={}; toast('تم إرسال طلب عرض السعر'); S.ordersTab='orders'; return go('orders');
+  }
+});
+document.getElementById('app').addEventListener('submit',e=>{e.preventDefault(); const q=new FormData(e.target).get('q').trim(); if(!q) return; go('list',{q,cat:null});});
+function orderNow(){ const p=byId(S.pid);
+  const el=document.createElement('div'); el.className='sheet-bg';
+  el.innerHTML=`<div class="sheet"><div class="grab"></div><h2 style="margin:0 0 4px;font-size:20px;font-weight:800">تأكيد الطلب</h2><p style="margin:0 0 14px;color:var(--muted);font-size:15px">${p.name}</p>
+   <div class="row-line"><span>سعر الآلة</span><span>${usd(p.price)}</span></div><div class="row-line"><span>الشحن والجمارك (تقديري)</span><span>${p.ship?usd(p.ship):'مشمول'}</span></div>
+   <div class="row-line" style="border:none"><span>${p.src==='cn'?'العربون المطلوب الآن (٣٠٪)':'المبلغ المطلوب'}</span><span style="color:var(--primary);font-size:18px">${usd(Math.round((p.price+p.ship)*(p.src==='cn'?.3:1)))}</span></div>
+   <p style="font-size:13px;color:var(--muted);margin:4px 0 16px">بعد التأكيد تظهر لك بيانات التحويل البنكي لرفع إيصال الدفع.</p>
+   <button class="btn dark" id="cf">تأكيد الطلب</button><button class="btn" id="cc" style="background:none;color:var(--muted);font-size:16px;height:48px;margin-top:6px">إلغاء</button></div>`;
+  document.getElementById('phone').appendChild(el);
+  el.addEventListener('click',ev=>{ if(ev.target===el||ev.target.id==='cc') el.remove(); if(ev.target.id==='cf'){ el.remove(); toast('تم تأكيد طلبك'); S.ordersTab='orders'; go('orders'); }});
+}
+render();
+</script>
+</body>
+</html>
