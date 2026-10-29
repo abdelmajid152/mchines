@@ -247,7 +247,7 @@ const minPrice=p=>p.vars?Math.min(...p.vars.map(v=>v.price)):p.price;
 const qKey=(pid,vi)=>pid+':'+vi;
 const qParse=k=>{const [pid,vi]=k.split(':').map(Number);const p=byId(pid);return {p,vi,d:pv(p,vi)};};
 
-const S={stack:['home'],pid:1,q:'',cat:null,vsel:{},user:null,known:null,bio:false,quote:{'2:1':2,'3:0':1},liked:{},muted:true,ordersTab:'orders',findTab:'link',volt:'220',inquiries:[
+const S={stack:['home'],pid:1,q:'',cat:null,vsel:{},user:null,known:null,bio:true,quote:{'2:1':2,'3:0':1},liked:{},muted:true,ordersTab:'orders',findTab:'link',volt:'220',inquiries:[
   {name:'مكبس طوب يدوي',when:'قبل يومين',status:'تم الرد · نقدر نجيبه',ok:true},
   {name:'آلة خياطة صناعية',when:'اليوم',status:'قيد المراجعة',ok:false}]};
 const cur=()=>S.stack[S.stack.length-1];
@@ -490,11 +490,6 @@ V.auth=()=>{ const st=A.step;
   ${A.type==='co'?`<label class="field" style="margin-top:24px"><span>اسم الشركة</span><input name="company" required placeholder="مثلاً: مصنع النيل للزيوت"></label>`:''}
   <label class="field" style="margin-top:24px"><span>المدينة</span><input name="city" placeholder="مثلاً: بورتسودان"></label>
   <div style="padding:26px 20px 0"><button class="btn dark">إنشاء الحساب</button></div></form></div>`;
- if(st==='bio') return `<div class="screen nopad"><div style="text-align:center;padding:90px 28px 0">
-  <div style="width:130px;height:130px;border-radius:50%;background:var(--tint);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto">${ic('finger',72,1.5)}</div>
-  <h1 style="margin:24px 0 8px;font-size:23px;font-weight:800">ادخل بلمسة واحدة</h1>
-  <p style="margin:0 0 30px;font-size:15px;line-height:1.7;color:var(--muted)">فعّل الدخول بالبصمة أو الوجه، فلا تحتاج لكتابة الرمز السري عند الدخول مرة أخرى.</p>
-  <button class="btn dark" data-act="bioYes">تفعيل البصمة</button><button class="btn" data-act="bioNo" style="background:none;color:var(--muted);font-size:16px;height:50px;margin-top:4px">لاحقاً</button></div></div>`;
 };
 function pinKey(k){
   if(A.tries>=5) return;
@@ -552,8 +547,6 @@ document.getElementById('app').addEventListener('click',e=>{
     case 'phoneEdit': A.confirm=false; return render();
     case 'otherNum': S.known=null; Object.assign(A,{step:'phone',phone:'',pin:'',err:'',tries:0}); return render();
     case 'forgot': return forgotSheet();
-    case 'bioYes': S.bio=true; toast('تم تفعيل الدخول بالبصمة'); return finishAuth();
-    case 'bioNo': return finishAuth();
     case 'bioToggle': S.bio=!S.bio; toast(S.bio?'تم تفعيل الدخول بالبصمة':'تم إيقاف الدخول بالبصمة'); return render(true);
     case 'logout': S.user=null; S.stack=['home']; toast('تم تسجيل الخروج'); return render();
     case 'sendfind': if(needAuth(null)) return; S.inquiries.unshift({name:'منتج من رابط خارجي',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك، سيرد عليك الدعم قريباً'); S.ordersTab='inq'; return go('orders');
@@ -567,7 +560,7 @@ document.getElementById('app').addEventListener('submit',e=>{e.preventDefault();
     if(S.known&&S.known.phone===ph){A.step='login';A.pin='';return render();} A.confirm=true; return render(true); }
   if(kind==='profile'){ const name=String(f.get('name')).trim(); if(!name) return;
     S.known={phone:A.phone,pin:A.pin1,name,type:A.type,company:String(f.get('company')||'').trim(),city:String(f.get('city')||'').trim()};
-    S.user={...S.known}; toast('تم إنشاء حسابك بنجاح'); A.step='bio'; return render(); }
+    S.user={...S.known}; toast('تم إنشاء حسابك بنجاح'); return finishAuth(); }
   const q=String(f.get('q')||'').trim(); if(!q) return; go('list',{q,cat:null});});
 function forgotSheet(){ const el=document.createElement('div'); el.className='sheet-bg';
   el.innerHTML=`<div class="sheet"><div class="grab"></div><h2 style="margin:0 0 8px;font-size:20px;font-weight:800">نسيت الرمز السري؟</h2>
