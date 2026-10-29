@@ -123,10 +123,26 @@ a{color:var(--primary)}
 .step .dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .step .ln{width:3px;height:26px}
 .empty{padding:50px 30px;text-align:center;color:var(--muted)}
+/* auth */
+.dots{display:flex;gap:14px;justify-content:center;direction:ltr;margin:18px 0 6px}
+.dots span{width:16px;height:16px;border-radius:50%;border:2px solid #9AA59E;transition:all .15s}
+.dots span.f{background:var(--primary);border-color:var(--primary);transform:scale(1.1)}
+.dots.err span{border-color:#D93A2B}
+.dots.err{animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 18px;padding:10px 40px 0;direction:ltr}
+.keypad button{height:62px;border-radius:50%;border:none;background:transparent;font-size:28px;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.keypad button:active{background:var(--tint2)}
+.keypad .ghost{visibility:hidden}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:10px}
+.phone-in{display:flex;align-items:center;border:1.5px solid var(--ink);border-radius:14px;height:60px;direction:ltr;overflow:hidden}
+.phone-in b{padding:0 14px;font-size:17px;color:var(--dark);border-right:1px solid var(--line);height:100%;display:flex;align-items:center;background:var(--tint2)}
+.phone-in input{flex:1;min-width:0;border:none;outline:none;font-size:19px;font-weight:600;padding:0 14px;letter-spacing:1px;background:transparent}
+.phone-in:focus-within{border-color:var(--primary)}
 </style>
 </head>
 <body>
-<div class="side-note"><b>آلياتك — نموذج تجريبي</b>هذا نموذج أولي للتصميم. الأسعار والمنتجات بيانات افتراضية للعرض فقط. جرّب الريلز، والبحث (اكتب «بلوك» مثلاً)، وقائمة عرض السعر.</div>
+<div class="side-note"><b>آلياتك — نموذج تجريبي</b>هذا نموذج أولي للتصميم. الأسعار والمنتجات بيانات افتراضية للعرض فقط. جرّب الريلز، والبحث (اكتب «بلوك» مثلاً)، وقائمة عرض السعر.<br><br><b style="font-size:15px">التسجيل</b>تصفّح كزائر، وعند أول طلب سيُطلب منك التسجيل: أي رقم سوداني، ثم رمز سري من ٦ أرقام. بعد تسجيل الخروج يظهر لك الدخول بالرمز أو البصمة.</div>
 <div class="phone" id="phone">
   <div id="app"></div>
   <div class="toast" id="toast"></div>
@@ -167,6 +183,9 @@ const I = {
   building:'<path d="M4 21V5l8-3v19M12 9h8v12M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
   upload:'<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
   copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>',
+  finger:'<path d="M6.5 8.5a6 6 0 0 1 11 3.3V13"/><path d="M4.5 14.5V12a7.5 7.5 0 0 1 1-3.7"/><path d="M9 20.5c1-1.8 1.5-4 1.5-6.5v-2a1.5 1.5 0 0 1 3 0v1.5"/><path d="M13.5 17c-.2 1.3-.6 2.6-1.2 3.7"/><path d="M7.5 18.5c.6-1.4 1-3 1-4.5V12a3.5 3.5 0 0 1 7 0v2.5c0 1.3-.1 2.6-.4 3.8"/><path d="M17.5 16.5c.2-.9.3-1.8.3-2.7"/>',
+  lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3M12 14.5v2.5"/>',
+  del:'<path d="M9 5h11v14H9l-6-7z"/><path d="M12.5 9.5l5 5M17.5 9.5l-5 5"/>',
   // categories
   agri:'<circle cx="7" cy="16" r="4"/><circle cx="18" cy="17" r="3"/><path d="M3.5 13V7h6l2.5 5h7.5v2.5M9.5 7V4"/>',
   build:'<path d="M2.5 20h19M5 20v-5h9v5M14 15l3.5-9 3.5 2-2 5"/><path d="M7 15v-3h5v3"/>',
@@ -228,7 +247,7 @@ const minPrice=p=>p.vars?Math.min(...p.vars.map(v=>v.price)):p.price;
 const qKey=(pid,vi)=>pid+':'+vi;
 const qParse=k=>{const [pid,vi]=k.split(':').map(Number);const p=byId(pid);return {p,vi,d:pv(p,vi)};};
 
-const S={stack:['home'],pid:1,q:'',cat:null,vsel:{},quote:{'2:1':2,'3:0':1},liked:{},muted:true,ordersTab:'orders',findTab:'link',volt:'220',inquiries:[
+const S={stack:['home'],pid:1,q:'',cat:null,vsel:{},user:null,known:null,bio:false,quote:{'2:1':2,'3:0':1},liked:{},muted:true,ordersTab:'orders',findTab:'link',volt:'220',inquiries:[
   {name:'مكبس طوب يدوي',when:'قبل يومين',status:'تم الرد · نقدر نجيبه',ok:true},
   {name:'آلة خياطة صناعية',when:'اليوم',status:'قيد المراجعة',ok:false}]};
 const cur=()=>S.stack[S.stack.length-1];
@@ -262,7 +281,8 @@ V.home=()=>`<div class="screen">
   <div style="width:46px;height:46px;border-radius:14px;background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff">${ic('gen',26,1.9)}</div>
   <div style="line-height:1.1"><div style="font-size:24px;font-weight:800;color:var(--dark)">آلياتك</div><div style="font-size:12px;font-weight:500;color:#5B655E;letter-spacing:1px">MACHINES · SUDAN</div></div>
  </div>
- <div style="padding:14px 20px 0"><div style="font-size:22px;font-weight:800;color:var(--primary)">أهلاً بك</div><div style="font-size:18px;font-weight:500;color:#3A443D">عبدالمجيد يحيى</div></div>
+ <div style="padding:14px 20px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:10px"><div><div style="font-size:22px;font-weight:800;color:var(--primary)">أهلاً بك</div><div style="font-size:18px;font-weight:500;color:#3A443D">${S.user?S.user.name:'تصفّح الآليات بحرية'}</div></div>
+  ${S.user?'':`<button data-act="login" style="height:40px;padding:0 16px;border-radius:999px;border:1.5px solid var(--dark);background:#fff;color:var(--dark);font-size:15px;font-weight:700;flex-shrink:0">تسجيل الدخول</button>`}</div>
  <form data-form="search" style="padding:16px 20px 0"><label style="display:flex;align-items:center;gap:10px;height:54px;padding:0 8px 0 16px;border:1.5px solid var(--ink);border-radius:16px">
   <input name="q" placeholder="ابحث عن آلة أو مكنة…" aria-label="بحث" style="flex:1;min-width:0;border:none;outline:none;font-size:16px;background:transparent">
   <button style="width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;border:none;display:flex;align-items:center;justify-content:center;padding:0" aria-label="بحث">${ic('search',20,2.4)}</button></label></form>
@@ -397,6 +417,10 @@ V.quote=()=>{const ids=Object.keys(S.quote);const total=ids.reduce((a,k)=>a+qPar
  <button class="btn dark" data-act="sendquote" ${ids.length?'':'disabled style="opacity:.5"'}>اطلب عرض السعر</button></div>`;};
 
 V.orders=()=>{const steps=[['تأكيد الطلب','٢ نوفمبر',2],['دفع العربون','تم استلام إشعار التحويل',2],['الشراء من المورد في الصين','',2],['في الشحن البحري','غادرت الشحنة ميناء الصين',1],['الوصول إلى بورتسودان','',0],['التخليص الجمركي','',0],['التسليم','',0]];
+ if(!S.user) return `<div class="screen"><div class="hdr"><span style="width:44px"></span><h1>طلباتي</h1>${supportMini()}</div>
+  <div style="text-align:center;padding:60px 32px 0"><div style="width:120px;height:120px;border-radius:50%;background:#EEF6F1;margin:0 auto;display:flex;align-items:center;justify-content:center;color:#6FA884">${ic('box',64,1.4)}</div>
+  <h2 style="margin:20px 0 6px;font-size:20px;font-weight:800">سجّل دخولك لمتابعة طلباتك</h2><p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:var(--muted)">طلباتك واستفساراتك وعروض الأسعار كلها في مكان واحد.</p>
+  <button class="btn dark" data-act="login">تسجيل الدخول / إنشاء حساب</button></div></div>${nav('orders')}`;
  return `<div class="screen"><div class="hdr"><span style="width:44px"></span><h1>طلباتي</h1>${supportMini()}</div>
  <div class="seg"><button data-ot="orders" class="${S.ordersTab==='orders'?'on':''}">الطلبات</button><button data-ot="inq" class="${S.ordersTab==='inq'?'on':''}">الاستفسارات (${S.inquiries.length})</button></div>
  ${S.ordersTab==='inq'?`<div style="padding:18px 20px 0">${inqList()}</div>`:`
@@ -408,14 +432,84 @@ V.orders=()=>{const steps=[['تأكيد الطلب','٢ نوفمبر',2],['دف�
 
 V.menu=()=>`<div class="screen">
  <div style="background:var(--dark);color:#fff;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-  <div><div style="font-size:22px;font-weight:700">أهلاً بك، عبدالمجيد</div><span style="display:inline-flex;margin-top:6px;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fff;color:var(--dark);align-items:center;gap:6px">${ic('building',14,2.2)}حساب شركة · موثّق</span></div>
+  ${S.user?`<div><div style="font-size:22px;font-weight:700">أهلاً بك، ${S.user.name.split(' ')[0]}</div><div style="font-size:14px;color:#CFE6D7;direction:ltr;text-align:right;margin-top:2px">${fmtPhone(S.user.phone)}</div><span style="display:inline-flex;margin-top:6px;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fff;color:var(--dark);align-items:center;gap:6px">${ic(S.user.type==='co'?'building':'user',14,2.2)}${S.user.type==='co'?`حساب شركة · ${S.user.company||''}`:'حساب فرد'}</span></div>`
+   :`<div><div style="font-size:22px;font-weight:700">أهلاً بك</div><div style="font-size:14px;color:#CFE6D7;margin:2px 0 10px">سجّل دخولك لمتابعة طلباتك</div><button data-act="login" style="height:40px;padding:0 18px;border-radius:999px;border:none;background:#fff;color:var(--dark);font-size:15px;font-weight:800">تسجيل الدخول / إنشاء حساب</button></div>`}
   <button data-go="home" aria-label="إغلاق" style="width:46px;height:46px;border-radius:50%;background:#fff;border:none;display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0">${ic('x',22,2.6)}</button></div>
  <div style="padding:0 20px">
  ${[['user','بيانات الحساب والشركة'],['box','طلباتي وعروض الأسعار','orders'],['clip','قائمة عرض السعر','quote'],['heart','المفضلة'],['pin','عناوين التوصيل'],['bell','الإشعارات'],['video','فيديوهات إرشادية'],['help','المساعدة والدعم الفني']].map(r=>`<button class="list-item" ${r[2]?`data-go="${r[2]}"`:'data-act="soon"'}><i>${ic(r[0],26,1.8)}</i>${r[1]}</button>`).join('')}
  <button class="list-item" data-act="share"><i style="background:var(--bright);color:#fff;border:none">${ic('share',24,2)}</i>ادعُ أصدقاءك</button>
- <button class="list-item" data-act="soon" style="color:#B42318;font-weight:700;border-bottom:none"><i style="color:#B42318;border-color:#F2D4D0">${ic('logout',24,2)}</i>تسجيل الخروج</button></div>
+ ${S.user?`<button class="list-item" data-act="bioToggle"><i>${ic('finger',26,1.8)}</i><span style="flex:1">الدخول بالبصمة</span><span style="width:50px;height:30px;border-radius:15px;background:${S.bio?'var(--bright)':'#C9D3CC'};position:relative;flex-shrink:0"><span style="position:absolute;top:3px;${S.bio?'left:3px':'right:3px'};width:24px;height:24px;border-radius:50%;background:#fff"></span></span></button>
+ <button class="list-item" data-act="logout" style="color:#B42318;font-weight:700;border-bottom:none"><i style="color:#B42318;border-color:#F2D4D0">${ic('logout',24,2)}</i>تسجيل الخروج</button>`:''}</div>
  <div style="text-align:center;font-size:13px;color:#6B746E;padding-top:10px">الإصدار 1.0.0 · نموذج تجريبي</div>
 </div>${nav('menu')}`;
+
+/* ---------- auth: phone + 6-digit PIN, no OTP ---------- */
+const A={step:'phone',phone:'',pin:'',pin1:'',err:'',tries:0,confirm:false,type:'ind',after:null};
+const toLatin=s=>s.replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));
+const fmtPhone=p=>'+249 '+p.slice(0,2)+' '+p.slice(2,5)+' '+p.slice(5);
+const weakPin=p=>/^(\d)\1{5}$/.test(p)||'0123456789'.includes(p)||'9876543210'.includes(p);
+const logo=()=>`<div class="auth-logo"><div style="width:52px;height:52px;border-radius:16px;background:var(--dark);display:flex;align-items:center;justify-content:center;color:#fff">${ic('gen',30,1.9)}</div><div style="line-height:1.1"><div style="font-size:26px;font-weight:800;color:var(--dark)">آلياتك</div><div style="font-size:12px;font-weight:500;color:#5B655E;letter-spacing:1px">MACHINES · SUDAN</div></div></div>`;
+function needAuth(after){ if(S.user) return false; Object.assign(A,{after,pin:'',err:'',confirm:false,tries:0,step:S.known?'login':'phone',phone:S.known?S.known.phone:''}); go('auth'); return true; }
+function finishAuth(){ const cb=A.after; A.after=null; S.stack=S.stack.filter(s=>s!=='auth'); if(!S.stack.length) S.stack=['home']; render(); if(cb) setTimeout(cb,150); }
+const keypad=(bio)=>`<div class="keypad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-key="${n}">${n}</button>`).join('')}
+ ${bio?`<button data-key="bio" aria-label="الدخول بالبصمة" style="color:var(--primary)">${ic('finger',32,1.8)}</button>`:'<button class="ghost" tabindex="-1" aria-hidden="true"></button>'}<button data-key="0">0</button><button data-key="del" aria-label="حذف" style="color:var(--muted)">${ic('del',28,1.8)}</button></div>`;
+const dots=()=>`<div class="dots ${A.err?'err':''}" aria-label="${A.pin.length} من ٦ أرقام">${[0,1,2,3,4,5].map(i=>`<span class="${i<A.pin.length?'f':''}"></span>`).join('')}</div><div style="min-height:24px;text-align:center;font-size:14px;font-weight:700;color:#B42318">${A.err}</div>`;
+V.auth=()=>{ const st=A.step;
+ const top=`<div class="hdr">${st==='login'?`<button class="circle-back" data-act="authClose" aria-label="إغلاق">${ic('x',18,2.6)}</button>`:backBtn()}<span></span><span style="width:44px"></span></div>`;
+ if(st==='phone') return `<div class="screen nopad">${top}<div style="padding:10px 20px 0">${logo()}
+  <h1 style="margin:34px 0 6px;font-size:23px;font-weight:800">سجّل الدخول أو أنشئ حساباً</h1>
+  <p style="margin:0 0 26px;font-size:15px;line-height:1.6;color:var(--muted)">أدخل رقم هاتفك. لن نرسل لك رسالة، فقط تأكد أن الرقم صحيح لأن فريقنا سيتواصل معك عليه.</p>
+  <form data-form="phone"><label style="display:block"><span style="display:block;font-size:14px;font-weight:600;margin-bottom:8px">رقم الهاتف</span>
+  <span class="phone-in"><b>+249</b><input name="phone" inputmode="tel" autocomplete="tel" placeholder="9X XXX XXXX" value="${A.phone}" aria-label="رقم الهاتف"></span></label>
+  <div style="min-height:24px;font-size:14px;font-weight:700;color:#B42318;margin-top:6px">${A.err}</div>
+  <button class="btn dark" style="margin-top:6px">متابعة</button></form>
+  <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:18px">بالمتابعة أنت توافق على الشروط وسياسة الخصوصية</p></div>
+  ${A.confirm?`<div class="sheet-bg" style="position:absolute"><div class="sheet"><div class="grab"></div>
+   <div style="width:64px;height:64px;border-radius:50%;background:var(--tint);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">${ic('info',32,2)}</div>
+   <h2 style="margin:0;text-align:center;font-size:20px;font-weight:800">هل هذا رقمك؟</h2>
+   <div style="text-align:center;direction:ltr;font-size:26px;font-weight:700;color:var(--dark);margin:12px 0 6px;letter-spacing:1px">${fmtPhone(A.phone)}</div>
+   <p style="text-align:center;margin:0 0 18px;font-size:14px;color:var(--muted)">سنتواصل معك على هذا الرقم بخصوص طلباتك، عبر الاتصال أو واتساب.</p>
+   <button class="btn dark" data-act="phoneYes">نعم، هذا رقمي</button><button class="btn" data-act="phoneEdit" style="background:none;color:var(--primary);font-size:16px;height:50px;margin-top:4px">تعديل الرقم</button></div></div>`:''}</div>`;
+ if(st==='login') return `<div class="screen nopad">${top}<div style="text-align:center;padding:0 20px">${logo()}
+  <div style="margin-top:26px;font-size:22px;font-weight:800;color:var(--primary)">أهلاً بك</div><div style="font-size:19px;font-weight:600">${S.known.name}</div>
+  <div style="direction:ltr;font-size:14px;color:var(--muted);margin-top:2px">${fmtPhone(S.known.phone)}</div>
+  <div style="margin-top:22px;font-size:16px;font-weight:600">${A.tries>=5?'تم إيقاف الدخول مؤقتاً':'أدخل رمزك السري'}</div>${dots()}</div>
+  ${A.tries>=5?`<div style="margin:10px 20px;padding:14px;border-radius:14px;background:#FDECEA;color:#8A1F14;font-size:14px;line-height:1.6;text-align:center">${ic('lock',22,2)}<br>أدخلت رمزاً خاطئاً ٥ مرات. حاول بعد ١٥ دقيقة، أو تواصل مع الدعم لإعادة تعيين الرمز.</div>`:keypad(S.bio)}
+  <div style="display:flex;justify-content:space-between;padding:14px 28px 0"><button data-act="forgot" style="border:none;background:none;color:var(--primary);font-size:15px;font-weight:700">نسيت الرمز؟</button><button data-act="otherNum" style="border:none;background:none;color:var(--muted);font-size:15px;font-weight:600">ليس أنت؟</button></div></div>`;
+ if(st==='create'||st==='repeat') return `<div class="screen nopad">${top}<div style="text-align:center;padding:10px 20px 0">
+  <div style="width:72px;height:72px;border-radius:50%;background:var(--tint);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto">${ic('lock',36,1.9)}</div>
+  <h1 style="margin:18px 0 6px;font-size:22px;font-weight:800">${st==='create'?'أنشئ رمزك السري':'أعد كتابة الرمز للتأكيد'}</h1>
+  <p style="margin:0;font-size:15px;color:var(--muted)">${st==='create'?'٦ أرقام تستخدمها للدخول إلى حسابك':'اكتب نفس الرمز مرة أخرى'}</p>${dots()}
+  <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px">${[1,2,3].map(i=>`<span style="width:${(st==='create'?1:2)>=i?24:8}px;height:6px;border-radius:3px;background:${(st==='create'?1:2)>=i?'var(--primary)':'#D5DED8'}"></span>`).join('')}</div></div>${keypad(false)}</div>`;
+ if(st==='profile') return `<div class="screen nopad">${top}<div style="padding:0 20px">
+  <div style="display:flex;gap:6px;justify-content:center;margin-bottom:16px">${[1,2,3].map(()=>`<span style="width:24px;height:6px;border-radius:3px;background:var(--primary)"></span>`).join('')}</div>
+  <h1 style="margin:0 0 6px;font-size:22px;font-weight:800">أكمل بياناتك</h1><p style="margin:0 0 22px;font-size:15px;color:var(--muted)">خطوة أخيرة وحسابك جاهز.</p></div>
+  <form data-form="profile">
+  <div class="seg" style="margin-bottom:26px"><button type="button" data-acct="ind" class="${A.type==='ind'?'on':''}">فرد</button><button type="button" data-acct="co" class="${A.type==='co'?'on':''}">شركة / مصنع</button></div>
+  <label class="field"><span>${A.type==='co'?'اسم المسؤول':'الاسم الكامل'}</span><input name="name" required placeholder="مثلاً: عبدالمجيد يحيى"></label>
+  ${A.type==='co'?`<label class="field" style="margin-top:24px"><span>اسم الشركة</span><input name="company" required placeholder="مثلاً: مصنع النيل للزيوت"></label>`:''}
+  <label class="field" style="margin-top:24px"><span>المدينة</span><input name="city" placeholder="مثلاً: بورتسودان"></label>
+  <div style="padding:26px 20px 0"><button class="btn dark">إنشاء الحساب</button></div></form></div>`;
+ if(st==='bio') return `<div class="screen nopad"><div style="text-align:center;padding:90px 28px 0">
+  <div style="width:130px;height:130px;border-radius:50%;background:var(--tint);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto">${ic('finger',72,1.5)}</div>
+  <h1 style="margin:24px 0 8px;font-size:23px;font-weight:800">ادخل بلمسة واحدة</h1>
+  <p style="margin:0 0 30px;font-size:15px;line-height:1.7;color:var(--muted)">فعّل الدخول بالبصمة أو الوجه، فلا تحتاج لكتابة الرمز السري عند الدخول مرة أخرى.</p>
+  <button class="btn dark" data-act="bioYes">تفعيل البصمة</button><button class="btn" data-act="bioNo" style="background:none;color:var(--muted);font-size:16px;height:50px;margin-top:4px">لاحقاً</button></div></div>`;
+};
+function pinKey(k){
+  if(A.tries>=5) return;
+  if(k==='bio'){ toast('تم التحقق بالبصمة'); return loginOK(); }
+  if(k==='del'){ A.pin=A.pin.slice(0,-1); A.err=''; return render(true); }
+  if(A.pin.length>=6) return;
+  A.pin+=k; A.err=''; render(true);
+  if(A.pin.length<6) return;
+  setTimeout(()=>{
+    if(A.step==='create'){ if(weakPin(A.pin)){A.err='رمز سهل التخمين، اختر رمزاً آخر';A.pin='';return render(true);} A.pin1=A.pin; A.pin=''; A.step='repeat'; return render(); }
+    if(A.step==='repeat'){ if(A.pin!==A.pin1){A.err='الرمزان غير متطابقين، ابدأ من جديد';A.pin='';A.step='create';return render(true);} A.pin=''; A.step='profile'; return render(); }
+    if(A.step==='login'){ if(A.pin===S.known.pin) return loginOK(); A.tries++; A.pin=''; A.err=A.tries>=5?'':`رمز خاطئ، تبقّت ${5-A.tries} محاولات`; return render(true); }
+  },160);
+}
+function loginOK(){ S.user={...S.known}; toast(`أهلاً بعودتك، ${S.user.name.split(' ')[0]}`); finishAuth(); }
 
 /* ---------- render & events ---------- */
 function render(keep=false){
@@ -428,6 +522,8 @@ document.getElementById('app').addEventListener('click',e=>{
   const t=e.target.closest('button,[data-go]'); if(!t) return;
   const d=t.dataset;
   if(d.go){ if(d.go==='reels'&&cur()==='reels'){document.getElementById('reels').scrollTo({top:0,behavior:'smooth'});return;} return go(d.go); }
+  if(d.key){ return pinKey(d.key); }
+  if(d.acct){ A.type=d.acct; return render(true); }
   if(d.vpid){ S.vsel[d.vpid]=+d.vi; return render(true); }
   if(d.pid){ S.pid=+d.pid; if(d.pvi!==undefined) S.vsel[S.pid]=+d.pvi; if(d.buy) return orderNow(); return go('product'); }
   if(d.cat){ return go('list',{cat:d.cat,q:''}); }
@@ -450,13 +546,37 @@ document.getElementById('app').addEventListener('click',e=>{
     case 'soon': return toast('هذه الشاشة ضمن المرحلة القادمة');
     case 'addq': { const p=byId(S.pid); const k=qKey(S.pid,vIdx(p)); if(S.quote[k]) return go('quote'); S.quote[k]=1; toast(p.vars?`أُضيف خيار ${pv(p).label} لقائمة عرض السعر`:'أُضيفت لقائمة عرض السعر'); return render(true); }
     case 'order': return orderNow();
-    case 'sendfind': S.inquiries.unshift({name:'منتج من رابط خارجي',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك، سيرد عليك الدعم قريباً'); S.ordersTab='inq'; return go('orders');
-    case 'sendcustom': S.inquiries.unshift({name:'طلب آلة خاصة',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك للدعم الفني'); S.ordersTab='inq'; return go('orders');
-    case 'sendquote': S.quote={}; toast('تم إرسال طلب عرض السعر'); S.ordersTab='orders'; return go('orders');
+    case 'login': return needAuth(null);
+    case 'authClose': A.after=null; S.stack=S.stack.filter(s=>s!=='auth'); if(!S.stack.length) S.stack=['home']; return render();
+    case 'phoneYes': A.confirm=false; A.step='create'; A.pin=''; A.err=''; return render();
+    case 'phoneEdit': A.confirm=false; return render();
+    case 'otherNum': S.known=null; Object.assign(A,{step:'phone',phone:'',pin:'',err:'',tries:0}); return render();
+    case 'forgot': return forgotSheet();
+    case 'bioYes': S.bio=true; toast('تم تفعيل الدخول بالبصمة'); return finishAuth();
+    case 'bioNo': return finishAuth();
+    case 'bioToggle': S.bio=!S.bio; toast(S.bio?'تم تفعيل الدخول بالبصمة':'تم إيقاف الدخول بالبصمة'); return render(true);
+    case 'logout': S.user=null; S.stack=['home']; toast('تم تسجيل الخروج'); return render();
+    case 'sendfind': if(needAuth(null)) return; S.inquiries.unshift({name:'منتج من رابط خارجي',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك، سيرد عليك الدعم قريباً'); S.ordersTab='inq'; return go('orders');
+    case 'sendcustom': if(needAuth(null)) return; S.inquiries.unshift({name:'طلب آلة خاصة',when:'الآن',status:'قيد المراجعة',ok:false}); toast('تم إرسال طلبك للدعم الفني'); S.ordersTab='inq'; return go('orders');
+    case 'sendquote': if(needAuth(()=>toast('تم تسجيل دخولك، اضغط «اطلب عرض السعر» للإرسال'))) return; S.quote={}; toast('تم إرسال طلب عرض السعر'); S.ordersTab='orders'; return go('orders');
   }
 });
-document.getElementById('app').addEventListener('submit',e=>{e.preventDefault(); const q=new FormData(e.target).get('q').trim(); if(!q) return; go('list',{q,cat:null});});
-function orderNow(){ const p=byId(S.pid);
+document.getElementById('app').addEventListener('submit',e=>{e.preventDefault(); const f=new FormData(e.target); const kind=e.target.dataset.form;
+  if(kind==='phone'){ let ph=toLatin(String(f.get('phone'))).replace(/\D/g,''); if(ph.startsWith('249')) ph=ph.slice(3); if(ph.startsWith('0')) ph=ph.slice(1);
+    A.phone=ph; if(!/^[19]\d{8}$/.test(ph)){A.err='رقم غير صحيح، اكتب ٩ أرقام يبدأ بـ 9 أو 1';return render(true);} A.err='';
+    if(S.known&&S.known.phone===ph){A.step='login';A.pin='';return render();} A.confirm=true; return render(true); }
+  if(kind==='profile'){ const name=String(f.get('name')).trim(); if(!name) return;
+    S.known={phone:A.phone,pin:A.pin1,name,type:A.type,company:String(f.get('company')||'').trim(),city:String(f.get('city')||'').trim()};
+    S.user={...S.known}; toast('تم إنشاء حسابك بنجاح'); A.step='bio'; return render(); }
+  const q=String(f.get('q')||'').trim(); if(!q) return; go('list',{q,cat:null});});
+function forgotSheet(){ const el=document.createElement('div'); el.className='sheet-bg';
+  el.innerHTML=`<div class="sheet"><div class="grab"></div><h2 style="margin:0 0 8px;font-size:20px;font-weight:800">نسيت الرمز السري؟</h2>
+   <p style="margin:0 0 18px;font-size:15px;line-height:1.7;color:var(--muted)">تواصل مع فريق الدعم عبر واتساب من نفس الرقم المسجل. بعد التحقق من هويتك، نعيد تعيين الرمز وتنشئ رمزاً جديداً.</p>
+   <button class="btn" id="fw" style="background:var(--bright);color:#fff">${ic('wa',22,2)}تواصل عبر واتساب</button><button class="btn" id="fc" style="background:none;color:var(--muted);font-size:16px;height:48px;margin-top:6px">إلغاء</button></div>`;
+  document.getElementById('phone').appendChild(el);
+  el.addEventListener('click',ev=>{ if(ev.target===el||ev.target.id==='fc') el.remove(); if(ev.target.closest('#fw')){ el.remove(); toast('سيفتح واتساب للتواصل مع الدعم'); }});
+}
+function orderNow(){ if(needAuth(()=>orderNow())) return; const p=byId(S.pid);
   const el=document.createElement('div'); el.className='sheet-bg';
   const paint=()=>{ const d=pv(p);
    el.innerHTML=`<div class="sheet"><div class="grab"></div><h2 style="margin:0 0 4px;font-size:20px;font-weight:800">تأكيد الطلب</h2><p style="margin:0 0 ${p.vars?4:14}px;color:var(--muted);font-size:15px">${p.name}</p>
